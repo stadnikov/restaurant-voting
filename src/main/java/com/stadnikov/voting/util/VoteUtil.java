@@ -1,0 +1,24 @@
+package com.stadnikov.voting.util;
+
+import com.stadnikov.voting.model.Vote;
+import com.stadnikov.voting.to.VoteTo;
+import lombok.experimental.UtilityClass;
+
+import java.time.LocalTime;
+import java.util.List;
+
+@UtilityClass
+public class VoteUtil {
+
+    public static VoteTo createTo(Vote vote) {
+        return new VoteTo(vote.getUser().getId(), vote.getDateTime(), vote.getRestaurant().getId());
+    }
+
+    public static List<VoteTo> createTos(List<Vote> votes) {
+        return votes.stream().map(VoteUtil::createTo).toList();
+    }
+
+    public static Boolean isOkToVote() {
+        return LocalTime.now().getHour() < 11;
+    }
+}
