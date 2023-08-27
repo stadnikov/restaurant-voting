@@ -17,11 +17,6 @@ public abstract class AbstractRestaurantController {
     @Autowired
     protected RestaurantRepository repository;
 
-    public void delete(int rid) {
-        log.info("delete rid = {}", rid);
-        repository.deleteById(rid);
-    }
-
     @GetMapping("/{rid}")
     public Restaurant get(@PathVariable int rid) {
         log.info("get rid = {}", rid);

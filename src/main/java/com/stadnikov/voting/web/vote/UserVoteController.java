@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
@@ -21,10 +19,12 @@ import java.time.LocalDateTime;
 public class UserVoteController extends AbstractVoteController {
     static final String REST_URL = "/api/restaurants";
 
-    //vote for restaurant with rid
     @PostMapping(value = "/{rid}/vote")
     public ResponseEntity<Vote> voteFor(@PathVariable int rid, @AuthenticationPrincipal AuthUser authUser) {
-        if (VoteUtil.isOkToVote()) {
+        //TODO work with queries!!!
+        log.info("voteFor rid = {} user = {}", rid, authUser);
+        HttpStatus httpStatus = HttpStatus.NOT_MODIFIED;
+        if (VoteUtil.isOkToVote(dateUtil)) {
             Vote vote = repository.getTodayByUserId(authUser.id());
             if (vote != null) {
                 vote.setDateTime(LocalDateTime.now());
@@ -32,15 +32,9 @@ public class UserVoteController extends AbstractVoteController {
             } else {
                 vote = new Vote(authUser.getUser(), LocalDateTime.now(), restaurantRepository.getById(rid));
             }
-            //create or update vote
-            Vote created = repository.save(vote);
-            URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(REST_URL + "/{rid}/vote")
-                    .buildAndExpand(created.getId()).toUri();
-            return ResponseEntity.created(uriOfNewResource).body(created);
-        } else {
-            //do nothing because unable to vote now
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            repository.save(vote);
+            httpStatus = HttpStatus.CREATED;
         }
+        return ResponseEntity.status(httpStatus).build();
     }
 }

@@ -11,7 +11,6 @@ import static java.util.Objects.requireNonNull;
 
 @Getter
 public class AuthUser extends org.springframework.security.core.userdetails.User {
-
     private final User user;
 
     public AuthUser(@NonNull User user) {

@@ -37,4 +37,22 @@ public class Food extends NamedEntity {
     @NotNull
     @Range(min = 10, max = 5000)
     private Integer price;
+
+    public Food(Integer id, String name, Restaurant restaurant, Date date, Integer price) {
+        super(id, name);
+        this.restaurant = restaurant;
+        this.date = date;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Food{" +
+                "restaurant=" + restaurant +
+                ", date=" + date +
+                ", price=" + price +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

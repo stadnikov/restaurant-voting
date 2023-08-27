@@ -1,5 +1,6 @@
 package com.stadnikov.voting.web.user;
 
+import com.stadnikov.voting.model.User;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import com.stadnikov.voting.model.User;
 
 import java.net.URI;
 import java.util.List;
@@ -20,7 +20,6 @@ import static com.stadnikov.voting.util.validation.ValidationUtil.checkNew;
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 // TODO: cache only most requested, seldom changed data!
 public class AdminUserController extends AbstractUserController {
-
     static final String REST_URL = "/api/admin/users";
 
     @Override

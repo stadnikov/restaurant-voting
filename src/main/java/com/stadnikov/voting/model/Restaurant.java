@@ -1,9 +1,6 @@
 package com.stadnikov.voting.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -12,11 +9,11 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames={"name"}, name="unique_restaurant_name")})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends NamedEntity {
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
 //    @OrderBy("dateTime DESC")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
 //    @ApiModelProperty(hidden = true)
@@ -25,5 +22,14 @@ public class Restaurant extends NamedEntity {
     public Restaurant(Integer id, String name, List<Food> food) {
         super(id, name);
         this.food = food;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "food=" + food +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

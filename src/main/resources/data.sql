@@ -19,7 +19,8 @@ VALUES ('TEA', 1, '2023-07-31', 100),
        ('TEA', 2, now(), 50),
        ('FRIED EGGS', 1, '2023-07-31', 250),
        ('FRIED EGGS', 1, now(), 999),
-       ('TOASTS', 2, now(), 150);
+       ('TOASTS', 2, now(), 150),
+       ('BURGER', 3, '2023-01-01', 350);
 
 INSERT INTO VOTE (user_id, date_time, restaurant_id)
 VALUES (1, now(), 2),

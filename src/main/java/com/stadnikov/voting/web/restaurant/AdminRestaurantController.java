@@ -16,14 +16,13 @@ import static com.stadnikov.voting.util.validation.ValidationUtil.checkNew;
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestaurantController extends AbstractRestaurantController {
-
     static final String REST_URL = "/api/admin/restaurants";
 
-    @Override
     @DeleteMapping("/{rid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int rid) {
-        super.delete(rid);
+        log.info("delete rid = {}", rid);
+        repository.deleteById(rid);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

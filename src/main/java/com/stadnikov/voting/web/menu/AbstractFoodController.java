@@ -1,6 +1,5 @@
 package com.stadnikov.voting.web.menu;
 
-import com.stadnikov.voting.model.Food;
 import com.stadnikov.voting.model.Restaurant;
 import com.stadnikov.voting.repository.FoodRepository;
 import com.stadnikov.voting.repository.RestaurantRepository;
@@ -35,20 +34,5 @@ public abstract class AbstractFoodController {
     public Optional<Restaurant> getRestaurantTodayFood(@PathVariable int rid) {
         log.info("getRestaurantTodayFood rid = {}", rid);
         return repository.getRestaurantWithTodayFood(rid);
-    }
-
-    public Food get(int id) {
-        log.info("get {}", id);
-        return repository.getExisted(id);
-    }
-
-    public void delete(int id) {
-        log.info("delete id = {}", id);
-        repository.deleteExisted(id);
-    }
-
-    public void deleteToday(int rid) {
-        log.info("deleteToday rid = {}", rid);
-        repository.deleteToday(rid);
     }
 }
