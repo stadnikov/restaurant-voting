@@ -9,7 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vote")
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames={"user_id", "date_time"}, name="unique_userid_datetime")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

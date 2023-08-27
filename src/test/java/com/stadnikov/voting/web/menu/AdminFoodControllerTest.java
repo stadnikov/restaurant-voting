@@ -2,6 +2,7 @@ package com.stadnikov.voting.web.menu;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.stadnikov.voting.error.NotFoundException;
 import com.stadnikov.voting.model.Food;
 import com.stadnikov.voting.repository.FoodRepository;
@@ -17,7 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,7 +38,6 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     private static final String SLASH_FOOD5_ID = "/5";
     private static final String SLASH_FOOD6_ID = "/6";
 
-
     @Autowired
     FoodRepository foodRepository;
 
@@ -46,13 +45,14 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         List<Food> foodList = List.of(
-                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99));
+                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isCreated());
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         List<Food> created = mapper.readValue(
                 action.andReturn().getResponse().getContentAsString(), new TypeReference<>() {
                 });
@@ -65,14 +65,15 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocationMoreThanOneItem() throws Exception {
         List<Food> foodList = List.of(
-                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99),
-                new Food(null, "New Food2", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 199));
+                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99),
+                new Food(null, "New Food2", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 199));
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isCreated());
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         List<Food> created = mapper.readValue(
                 action.andReturn().getResponse().getContentAsString(), new TypeReference<>() {
                 });
@@ -80,6 +81,18 @@ class AdminFoodControllerTest extends AbstractControllerTest {
 
         FoodTestData.FOOD_MATCHER.assertMatch(created, foodList);
         FoodTestData.FOOD_MATCHER.assertMatch(repositoryFood, foodList);
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createWithLocationDuplicate() throws Exception {
+//       Existed value ('BURGER', 3, '2023-01-01', 350)
+        List<Food> foodList = List.of(
+                new Food(null, "BURGER", RestaurantTestData.RESTAURANT_3, LocalDate.of(2023, 1, 1), 99));
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(foodList)))
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -96,7 +109,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocationWithBadRid() throws Exception {
         List<Food> foodList = List.of(
-                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99));
+                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_BAD_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
@@ -106,7 +119,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @Test
     void createWithLocationNotAuthorized() throws Exception {
         List<Food> foodList = List.of(
-                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99));
+                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
@@ -117,7 +130,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void createWithLocationWithBadUserRole() throws Exception {
         List<Food> foodList = List.of(
-                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99));
+                new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
@@ -127,7 +140,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99);
+        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99);
         perform(MockMvcRequestBuilders.put(REST_URL + SLASH_RID + SLASH_MENU + SLASH_FOOD5_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedFood)))
@@ -150,7 +163,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateBadRid() throws Exception {
-        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99);
+        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99);
         perform(MockMvcRequestBuilders.put(REST_URL + SLASH_BAD_RID + SLASH_MENU + SLASH_FOOD5_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedFood)))
@@ -161,7 +174,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateBadId() throws Exception {
-        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99);
+        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99);
         perform(MockMvcRequestBuilders.put(REST_URL + SLASH_RID + SLASH_MENU + SLASH_BAD_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedFood)))
@@ -171,7 +184,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
 
     @Test
     void updateNotAuthorized() throws Exception {
-        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99);
+        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99);
         perform(MockMvcRequestBuilders.put(REST_URL + SLASH_RID + SLASH_MENU + SLASH_FOOD5_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedFood)))
@@ -182,7 +195,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateWithBadUserRole() throws Exception {
-        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, Date.valueOf(LocalDate.now()), 99);
+        Food updatedFood = new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99);
         perform(MockMvcRequestBuilders.put(REST_URL + SLASH_RID + SLASH_MENU + SLASH_FOOD5_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedFood)))

@@ -11,10 +11,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "food")
+@Table(name = "food", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "name", "date"}, name = "unique_restaurant_id_name_date")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,14 +31,14 @@ public class Food extends NamedEntity {
     @NotNull
     @Basic
     @Temporal(TemporalType.DATE)
-    private Date date = new Date();
+    private LocalDate date;
 
     @Column(name = "price", nullable = false)
     @NotNull
     @Range(min = 10, max = 5000)
     private Integer price;
 
-    public Food(Integer id, String name, Restaurant restaurant, Date date, Integer price) {
+    public Food(Integer id, String name, Restaurant restaurant, LocalDate date, Integer price) {
         super(id, name);
         this.restaurant = restaurant;
         this.date = date;

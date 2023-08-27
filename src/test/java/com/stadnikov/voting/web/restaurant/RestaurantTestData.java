@@ -18,7 +18,7 @@ public class RestaurantTestData {
     public static final Restaurant RESTAURANT_3 = new Restaurant(3, "Italian Restaurant", null);
     public static final Restaurant RESTAURANT_4 = new Restaurant(4, "Chinese Restaurant", null);
 
-    public static final List<Restaurant> RESTAURANTS = List.of(RESTAURANT_1, RESTAURANT_2, RESTAURANT_3, RESTAURANT_4);
+    public static final List<Restaurant> RESTAURANTS = List.of(RESTAURANT_2, RESTAURANT_4, RESTAURANT_3, RESTAURANT_1);
 
-    public static final List<Restaurant> RESTAURANTS_WITH_TODAY_FOOD = List.of(RESTAURANT_1, RESTAURANT_2);
+    public static final List<Restaurant> RESTAURANTS_WITH_TODAY_FOOD = List.of(RESTAURANT_2, RESTAURANT_1);
 }
