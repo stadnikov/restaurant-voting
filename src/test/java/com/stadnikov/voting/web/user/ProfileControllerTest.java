@@ -5,20 +5,20 @@ import com.stadnikov.voting.repository.UserRepository;
 import com.stadnikov.voting.to.UserTo;
 import com.stadnikov.voting.util.JsonUtil;
 import com.stadnikov.voting.util.UsersUtil;
+import com.stadnikov.voting.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import com.stadnikov.voting.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProfileControllerTest extends AbstractControllerTest {
+public class ProfileControllerTest extends AbstractControllerTest {
 
     @Autowired
     private UserRepository repository;

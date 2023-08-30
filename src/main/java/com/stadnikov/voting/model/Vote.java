@@ -9,11 +9,13 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames={"user_id", "date_time"}, name="unique_userid_datetime")})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames={"date_time", "user_id"},
+        name="unique_datetime_userid_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@ToString
 public class Vote extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,12 +23,10 @@ public class Vote extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
     @NotNull
-//    private int user_id;
     private User user;
 
     @Column(name = "date_time", nullable = false)
     @NotNull
-//    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
     private LocalDateTime dateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,16 +34,5 @@ public class Vote extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
     @NotNull
-//    private int restaurant_id;
     private Restaurant restaurant;
-
-    @Override
-    public String toString() {
-        return "Vote{" +
-                "user=" + user +
-                ", dateTime=" + dateTime +
-                ", restaurant=" + restaurant +
-                ", id=" + id +
-                '}';
-    }
 }

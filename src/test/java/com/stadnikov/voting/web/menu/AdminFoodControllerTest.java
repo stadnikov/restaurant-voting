@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AdminFoodControllerTest extends AbstractControllerTest {
+public class AdminFoodControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = "/api/admin/restaurants";
     private static final String SLASH_MENU = "/menu";
@@ -86,10 +86,10 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocationDuplicate() throws Exception {
-//       Existed value ('BURGER', 3, '2023-01-01', 350)
+//       Existed value ('HAMBURGER', 3, '2023-02-01', 400);
         List<Food> foodList = List.of(
-                new Food(null, "BURGER", RestaurantTestData.RESTAURANT_3, LocalDate.of(2023, 1, 1), 99));
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
+                new Food(null, "HAMBURGER", RestaurantTestData.RESTAURANT_3, LocalDate.of(2023, 2, 1), 99));
+        perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isConflict());
@@ -99,7 +99,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocationWithBadFood() throws Exception {
         List<Food> foodList = List.of(new Food(null, null, null, null, null));
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
+        perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isUnprocessableEntity());
@@ -110,7 +110,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     void createWithLocationWithBadRid() throws Exception {
         List<Food> foodList = List.of(
                 new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_BAD_RID + SLASH_MENU)
+        perform(MockMvcRequestBuilders.post(REST_URL + SLASH_BAD_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isNotFound());
@@ -120,7 +120,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     void createWithLocationNotAuthorized() throws Exception {
         List<Food> foodList = List.of(
                 new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
+        perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isUnauthorized());
@@ -131,7 +131,7 @@ class AdminFoodControllerTest extends AbstractControllerTest {
     void createWithLocationWithBadUserRole() throws Exception {
         List<Food> foodList = List.of(
                 new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
+        perform(MockMvcRequestBuilders.post(REST_URL + SLASH_RID + SLASH_MENU)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(foodList)))
                 .andExpect(status().isForbidden());

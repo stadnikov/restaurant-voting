@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AdminVoteControllerTest extends AbstractControllerTest {
+public class AdminVoteControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = AdminVoteController.REST_URL + '/';
 
@@ -80,7 +80,4 @@ class AdminVoteControllerTest extends AbstractControllerTest {
                 .andExpect(status().isForbidden())
                 .andDo(print());
     }
-
-
-    //TODO add test for get UNREGISTERED, getWIthNoVotesForThatDate
 }

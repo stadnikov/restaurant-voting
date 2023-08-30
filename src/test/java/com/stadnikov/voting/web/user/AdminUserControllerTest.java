@@ -3,6 +3,7 @@ package com.stadnikov.voting.web.user;
 import com.stadnikov.voting.model.Role;
 import com.stadnikov.voting.model.User;
 import com.stadnikov.voting.repository.UserRepository;
+import com.stadnikov.voting.web.AbstractControllerTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import com.stadnikov.voting.web.AbstractControllerTest;
 
+import static com.stadnikov.voting.web.user.UserTestData.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static com.stadnikov.voting.web.user.UserTestData.*;
 
-class AdminUserControllerTest extends AbstractControllerTest {
+public class AdminUserControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = AdminUserController.REST_URL + '/';
 

@@ -2,6 +2,7 @@ package com.stadnikov.voting.web.restaurant;
 
 import com.stadnikov.voting.model.Restaurant;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,7 @@ import static com.stadnikov.voting.util.validation.ValidationUtil.checkNew;
 public class AdminRestaurantController extends AbstractRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
 
-    @DeleteMapping("/{rid}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int rid) {
-        log.info("delete rid = {}", rid);
-        repository.deleteById(rid);
-    }
-
+    @CacheEvict(value = { "restaurant", "restaurants" }, key = "#restaurant.id")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
@@ -36,11 +31,20 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @CacheEvict(value = { "restaurant", "restaurants" }, key = "#restaurant.id")
     @PutMapping(value = "/{rid}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int rid) {
         log.info("update {} with rid={}", restaurant, rid);
         assureIdConsistent(restaurant, rid);
         repository.saveOrUpdate(restaurant);
+    }
+
+    @CacheEvict(value = { "restaurant", "restaurants" }, key = "#rid")
+    @DeleteMapping("/{rid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int rid) {
+        log.info("delete rid = {}", rid);
+        repository.deleteById(rid);
     }
 }

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AdminRestaurantControllerTest extends AbstractControllerTest {
+public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     static final String REST_URL = "/api/admin/restaurants";
 
@@ -38,9 +38,18 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
+        // create New Restaurant
+        Restaurant newRestaurant = RestaurantTestData.RESTAURANT_NEW;
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newRestaurant)));
         List<Restaurant> restaurantList = restaurantRepository.getAll();
-        restaurantList.remove(RestaurantTestData.RESTAURANT_3);
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RID))
+        Restaurant created = RestaurantTestData.RESTAURANT_MATCHER.readFromJson(action);
+        int newId = created.id();
+        newRestaurant.setId(newId);
+        // and remove New Restaurant
+        restaurantList.remove(newRestaurant);
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + newId))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertEquals(restaurantList, restaurantRepository.getAll());

@@ -2,6 +2,8 @@ package com.stadnikov.voting.repository;
 
 import com.stadnikov.voting.model.Food;
 import com.stadnikov.voting.model.Restaurant;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,18 +11,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 public interface FoodRepository extends BaseRepository<Food> {
 
-    @Query("select restaurant from Restaurant restaurant left join fetch restaurant.food food " +
-            "where restaurant.id = :rid AND food.date = CURRENT_DATE()")
+    @Cacheable(value = "restaurant_today_food", key = "#rid")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.food f WHERE r.id = :rid AND f.date = CURRENT_DATE()")
     Optional<Restaurant> getRestaurantWithTodayFood(int rid);
 
-    @Query("select restaurant from Restaurant restaurant left join fetch restaurant.food food " +
-            "where food.date = CURRENT_DATE()")
+    @Cacheable("restaurants_today_food")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.food food WHERE food.date = CURRENT_DATE()")
     List<Restaurant> getRestaurantsWithTodayFood();
 
-    @Modifying
     @Transactional
-    @Query("delete from Food food where food.restaurant.id = :rid AND food.date = CURRENT_DATE()")
+    @Modifying
+    @CacheEvict(value = { "restaurant_today_food", "restaurants_today_food" }, key = "#rid")
+    @Query("DELETE FROM Food f WHERE f.restaurant.id = :rid AND f.date = CURRENT_DATE()")
     void deleteToday(int rid);
 }

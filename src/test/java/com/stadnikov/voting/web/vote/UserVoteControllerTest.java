@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserVoteControllerTest extends AbstractControllerTest {
+public class UserVoteControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = UserVoteController.REST_URL + '/';
 
@@ -29,7 +29,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
     private static final int ANOTHER_RID = 4;
 
     private static final int BAD_RID = 0;
-
 
     DateUtil dateUtil;
 

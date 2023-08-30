@@ -3,10 +3,7 @@ package com.stadnikov.voting.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -14,10 +11,12 @@ import org.hibernate.validator.constraints.Range;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "food", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "name", "date"}, name = "unique_restaurant_id_name_date")})
+@Table(name = "food", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "food_date", "name"},
+        name = "unique_restaurantid_date_name_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Food extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,7 +26,7 @@ public class Food extends NamedEntity {
 //    @NotNull
     private Restaurant restaurant;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "food_date", nullable = false)
     @NotNull
     @Basic
     @Temporal(TemporalType.DATE)
@@ -43,16 +42,5 @@ public class Food extends NamedEntity {
         this.restaurant = restaurant;
         this.date = date;
         this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "Food{" +
-                "restaurant=" + restaurant +
-                ", date=" + date +
-                ", price=" + price +
-                ", name='" + name + '\'' +
-                ", id=" + id +
-                '}';
     }
 }

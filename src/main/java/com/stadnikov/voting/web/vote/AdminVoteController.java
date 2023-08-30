@@ -21,12 +21,12 @@ public class AdminVoteController extends AbstractVoteController {
     @GetMapping("/{date}")
     public List<VoteTo> get(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
         log.info("get date = {}", date);
-        return createTos(super.repository.getVotesByDate(date));
+        return createTos(repository.getVotesByDate(date));
     }
 
     @GetMapping
     public List<VoteTo> getToday() {
-        log.info("get today");
-        return createTos(super.repository.getTodayVotes());
+        log.info("getToday");
+        return createTos(repository.getTodayVotes());
     }
 }

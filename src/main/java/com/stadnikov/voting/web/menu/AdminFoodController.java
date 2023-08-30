@@ -4,6 +4,7 @@ import com.stadnikov.voting.error.NotFoundException;
 import com.stadnikov.voting.model.Food;
 import com.stadnikov.voting.model.Restaurant;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,8 @@ import static com.stadnikov.voting.util.validation.ValidationUtil.checkNew;
 public class AdminFoodController extends AbstractFoodController {
     static final String REST_URL = "/api/admin/restaurants";
 
-    //Post menu for spec. restaurant (a lot of food)
+    //Post menu for spec. restaurant (can have a lot of food)
+    @CacheEvict(value = { "restaurant_today_food", "restaurants_today_food" }, key = "#rid")
     @PostMapping(value = "/{rid}/menu",
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Food>> createWithLocation(@Valid @RequestBody List<Food> listOfFood,
@@ -40,6 +42,7 @@ public class AdminFoodController extends AbstractFoodController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @CacheEvict(value = { "restaurant_today_food", "restaurants_today_food" }, key = "#rid")
     @PutMapping(value = "/{rid}/menu/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Food food, @PathVariable int id, @PathVariable int rid) {
@@ -51,6 +54,7 @@ public class AdminFoodController extends AbstractFoodController {
         repository.save(food);
     }
 
+    @CacheEvict(value = { "restaurant_today_food", "restaurants_today_food" }, key = "#rid")
     @DeleteMapping("/{rid}/menu/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int rid, @PathVariable int id) {
@@ -63,7 +67,7 @@ public class AdminFoodController extends AbstractFoodController {
         }
     }
 
-    //Delete today menu for specified restaurant
+    @CacheEvict(value = { "restaurant_today_food", "restaurants_today_food" }, key = "#rid")
     @DeleteMapping("/{rid}/menu")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTodayFoodForRestaurant(@PathVariable int rid) {

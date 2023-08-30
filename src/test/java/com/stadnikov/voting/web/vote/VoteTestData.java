@@ -37,6 +37,6 @@ public class VoteTestData {
 
     public static final VoteTo voteToWithDate_1 = new VoteTo(1,LocalDateTime.of(2023, 8, 1, 10, 0), 1);
     public static final VoteTo voteToWithDate_2 = new VoteTo(3,LocalDateTime.of(2023, 8, 1, 9, 0),2 );
-    public static final List<VoteTo> voteTosWithDate = List.of(voteToWithDate_1, voteToWithDate_2);
+    public static final List<VoteTo> voteTosWithDate = List.of(voteToWithDate_2, voteToWithDate_1);
 
 }

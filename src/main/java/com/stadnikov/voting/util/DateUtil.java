@@ -7,6 +7,7 @@ import java.time.LocalTime;
 
 @Configuration
 public class DateUtil {
+    // for tests changing time
     public static int hourToTest = 11;
 
     @Bean

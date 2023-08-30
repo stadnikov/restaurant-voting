@@ -8,6 +8,8 @@ import java.util.List;
 
 @UtilityClass
 public class VoteUtil {
+    private static final int hourOfStopVoting = 11;
+
     public static VoteTo createTo(Vote vote) {
         return new VoteTo(vote.getUser().getId(), vote.getDateTime(), vote.getRestaurant().getId());
     }
@@ -17,6 +19,6 @@ public class VoteUtil {
     }
 
     public static Boolean isOkToVote(DateUtil dateUtil) {
-        return dateUtil.getCurrentHour() < 11;
+        return dateUtil.getCurrentHour() < hourOfStopVoting;
     }
 }
