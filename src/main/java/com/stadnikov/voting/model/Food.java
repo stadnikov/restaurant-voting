@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
+@ToString(callSuper = true)
 public class Food extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

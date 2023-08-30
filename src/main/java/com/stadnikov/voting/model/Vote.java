@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString
+@ToString(callSuper = true)
 public class Vote extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

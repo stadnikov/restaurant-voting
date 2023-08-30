@@ -23,7 +23,6 @@ public class UserVoteController extends AbstractVoteController {
     @CacheEvict(value = { "votes_today", "vote_by_userid" }, key = "#authUser.id")
     @PostMapping(value = "/{rid}/vote")
     public ResponseEntity<Vote> voteFor(@PathVariable int rid, @AuthenticationPrincipal AuthUser authUser) {
-        //TODO work with queries!!!
         log.info("voteFor rid = {} user = {}", rid, authUser);
         HttpStatus httpStatus = HttpStatus.NOT_MODIFIED;
         if (VoteUtil.isOkToVote(dateUtil)) {

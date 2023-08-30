@@ -13,7 +13,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface VoteRepository extends BaseRepository<Vote> {
 
-    @Cacheable(value = "votes_by_date", key = "#date")
     @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant WHERE CAST(v.dateTime as date) = :date")
     List<Vote> getVotesByDate(@DateTimeFormat(pattern = "yyyy-MM-dd") Date date);
 
@@ -22,7 +21,6 @@ public interface VoteRepository extends BaseRepository<Vote> {
         return getVotesByDate(java.sql.Date.valueOf(LocalDate.now()));
     }
 
-    @Cacheable(value = "vote_by_userid", key = "#userId")
     @Query("SELECT v FROM Vote v LEFT JOIN FETCH v.restaurant " +
             "WHERE CAST(v.dateTime as date) = CURRENT_DATE AND v.user.id = :userId")
     Vote getTodayByUserId(int userId);
