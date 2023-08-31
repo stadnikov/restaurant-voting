@@ -1,7 +1,6 @@
 package com.stadnikov.voting.web.menu;
 
 import com.stadnikov.voting.model.Food;
-import com.stadnikov.voting.model.Restaurant;
 import com.stadnikov.voting.web.MatcherFactory;
 
 import java.time.LocalDate;
@@ -11,9 +10,6 @@ import static com.stadnikov.voting.web.restaurant.RestaurantTestData.RESTAURANT_
 import static com.stadnikov.voting.web.restaurant.RestaurantTestData.RESTAURANT_2;
 
 public class FoodTestData {
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_FOOD_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class);
-
     public static final MatcherFactory.Matcher<Food> FOOD_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Food.class, "id", "date", "restaurant");
 
@@ -23,8 +19,4 @@ public class FoodTestData {
 
     public static final List<Food> RESTAURANT_1_FOOD = List.of(FOOD_1_1);
     public static final List<Food> RESTAURANT_2_FOOD = List.of(FOOD_2_1, FOOD_2_2);
-
-//    static {
-//        RESTAURANT_2.setFood(RESTAURANT_2_FOOD);
-//    }
 }

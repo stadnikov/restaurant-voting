@@ -13,11 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserRestaurantControllerTest extends AbstractControllerTest {
     private static final String REST_URL = "/api/restaurants";
-
     private static final String REST_URL_SLASH = REST_URL + "/";
-
     private static final int RID = 3;
-
     private static final int BAD_RID = 0;
 
     @Test
@@ -44,7 +41,6 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
-
 
     @Test
     @WithUserDetails(value = USER_MAIL)

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 import static com.stadnikov.voting.util.validation.ValidationUtil.assureIdConsistent;
 import static com.stadnikov.voting.util.validation.ValidationUtil.checkNew;
@@ -60,7 +61,7 @@ public class AdminFoodController extends AbstractFoodController {
     public void delete(@PathVariable int rid, @PathVariable int id) {
         log.info("delete id = {}", id);
         Food food = repository.getExisted(id);
-        if (food.getRestaurant().getId().equals(rid)) {
+        if (Objects.equals(food.getRestaurant().getId(), rid)) {
             repository.deleteExisted(id);
         } else {
             throw new NotFoundException("Entity for restaurant =" + rid + " with id=" + id + " not found");

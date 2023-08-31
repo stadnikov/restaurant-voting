@@ -24,5 +24,5 @@ import org.junit.platform.suite.api.SuiteDisplayName;
         UserRestaurantControllerTest.class,
         ProfileControllerTest.class
 })
-public class TestsRunner {
+public class AllTestsRunner {
 }

@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AdminVoteControllerTest extends AbstractControllerTest {
-
     private static final String REST_URL_SLASH = AdminVoteController.REST_URL + '/';
 
     @Test
@@ -48,8 +47,7 @@ public class AdminVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getWithNoVotesForThatDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH +
-                LocalDate.of(1999, 1, 1)))
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + LocalDate.of(1999, 1, 1)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

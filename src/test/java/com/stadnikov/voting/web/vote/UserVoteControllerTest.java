@@ -21,30 +21,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserVoteControllerTest extends AbstractControllerTest {
-
     private static final String REST_URL_SLASH = UserVoteController.REST_URL + '/';
-
     private static final int RID = 3;
-
     private static final int ANOTHER_RID = 4;
-
     private static final int BAD_RID = 0;
-
-    DateUtil dateUtil;
 
     @Autowired
     VoteRepository voteRepository;
+
+    private DateUtil dateUtil;
 
     @BeforeEach
     void setup() {
         dateUtil = new DateUtil();
     }
 
+    private void setHour(int hour) throws NoSuchFieldException, IllegalAccessException {
+        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
+        field.set(dateUtil, hour);
+    }
+
     @Test
     @WithUserDetails(value = USER_MAIL)
     void voteNewAfterEleven() throws Exception {
-        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
-        field.set(dateUtil, 15);
+        setHour(15);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isNotModified());
@@ -53,20 +53,17 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void voteNewBeforeEleven() throws Exception {
-        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
-        field.set(dateUtil, 10);
+        setHour(10);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isCreated());
-        assertEquals(new VoteTo(USER_ID, LocalDateTime.now(), RID),
-                createTo(voteRepository.getTodayByUserId(USER_ID)));
+        assertEquals(new VoteTo(USER_ID, LocalDateTime.now(), RID), createTo(voteRepository.getTodayByUserId(USER_ID)));
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void voteAgainBeforeEleven() throws Exception {
-        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
-        field.set(dateUtil, 10);
+        setHour(10);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -80,12 +77,11 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void voteAgainAfterOkVoteAfterEleven() throws Exception {
-        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
-        field.set(dateUtil, 10);
+        setHour(10);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isCreated());
-        field.set(dateUtil, 11);
+        setHour(11);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + ANOTHER_RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isNotModified());
@@ -97,12 +93,11 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void voteNewBadRid() throws Exception {
-        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
-        field.set(dateUtil, 10);
+        setHour(10);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + BAD_RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
-        field.set(dateUtil, 12);
+        setHour(12);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + BAD_RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isNotModified());
@@ -110,15 +105,13 @@ public class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     void voteNewUnauthorized() throws Exception {
-        Field field = dateUtil.getClass().getDeclaredField("hourToTest");
-        field.set(dateUtil, 10);
+        setHour(10);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + BAD_RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
-        field.set(dateUtil, 12);
+        setHour(12);
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + BAD_RID + "/vote"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
-
 }

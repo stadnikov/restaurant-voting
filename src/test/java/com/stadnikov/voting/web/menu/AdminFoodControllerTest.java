@@ -207,10 +207,11 @@ public class AdminFoodControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + SLASH_RID + SLASH_MENU + SLASH_FOOD6_ID))
+        Food savedFood = foodRepository.save(new Food(null, "New Food", RestaurantTestData.RESTAURANT_3, LocalDate.now(), 99));
+        perform(MockMvcRequestBuilders.delete(REST_URL + SLASH_RID + SLASH_MENU + "/" + savedFood.getId()))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> foodRepository.getExisted(6));
+        assertThrows(NotFoundException.class, () -> foodRepository.getExisted(8));
     }
 
     @Test

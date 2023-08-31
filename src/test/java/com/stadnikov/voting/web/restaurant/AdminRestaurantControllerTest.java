@@ -38,18 +38,13 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        // create New Restaurant
         Restaurant newRestaurant = RestaurantTestData.RESTAURANT_NEW;
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newRestaurant)));
+        newRestaurant.setId(null);
+        restaurantRepository.saveOrUpdate(newRestaurant);
         List<Restaurant> restaurantList = restaurantRepository.getAll();
-        Restaurant created = RestaurantTestData.RESTAURANT_MATCHER.readFromJson(action);
-        int newId = created.id();
-        newRestaurant.setId(newId);
         // and remove New Restaurant
         restaurantList.remove(newRestaurant);
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + newId))
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + newRestaurant.getId()))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertEquals(restaurantList, restaurantRepository.getAll());
@@ -134,8 +129,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        Restaurant updatedRestaurant = new Restaurant(RID, "Updated Restaurant", new ArrayList<>());
-        updatedRestaurant.setId(null);
+        Restaurant updatedRestaurant = new Restaurant(null, "Updated Restaurant", new ArrayList<>());
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedRestaurant)))
@@ -149,8 +143,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Restaurant updatedRestaurant = new Restaurant(RID, "VIP Restaurant", new ArrayList<>());
-        updatedRestaurant.setId(null);
+        Restaurant updatedRestaurant = new Restaurant(null, "VIP Restaurant", new ArrayList<>());
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedRestaurant)))
